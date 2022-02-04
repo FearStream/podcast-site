@@ -1,0 +1,42 @@
+#!/bin/bash
+
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep ".php\{0,1\}$")
+
+if [[ "$STAGED_FILES" = "" ]]; then
+  exit 0
+fi
+
+PASS=true
+
+printf "\nValidating PHPCS:\n"
+
+# Check for phpcs
+which ./vendor/bin/phpcs &> /dev/null
+if [[ "$?" == 1 ]]; then
+  printf "\t\033[41mPlease install PHPCS\033[0m"
+  exit 1
+fi
+
+RULESET=./phpcs.xml
+
+for FILE in $STAGED_FILES
+do
+  if ./vendor/bin/phpcs --standard="$RULESET" "$FILE";
+  then
+      printf '\t\033[32mPHPCS Passed: %s\033[0m' "$FILE"
+  else
+      printf '\t\033[41mPHPCS Failed: %s\033[0m' "$FILE"
+    PASS=false
+  fi
+done
+
+printf "\nPHPCS validation completed!\n"
+
+if ! $PASS; then
+  printf "\033[41mCOMMIT FAILED:\033[0m Your commit contains files that should pass PHPCS but do not. Please fix the PHPCS errors and try again.\n"
+  exit 1
+else
+  printf "\033[42mCOMMIT SUCCEEDED\033[0m\n"
+fi
+
+exit $?
