@@ -1,0 +1,29 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = tab
+insert_final_newline = false
+max_line_length = 120
+tab_width = 4
+ij_formatter_off_tag = @formatter:off
+ij_formatter_on_tag = @formatter:off
+ij_formatter_tags_enabled = false
+ij_smart_tabs = false
+ij_wrap_on_typing = false
+
+[*.php]
+indent_size = 4
+
+[*.{js,vue}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{yml,yaml}]
+indent_size = 2
+
+[docker-compose.yml]
+indent_size = 4
